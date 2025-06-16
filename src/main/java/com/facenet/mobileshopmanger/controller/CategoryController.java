@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("${api.prefix}/categories")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://phone-management-react.vercel.app/")
 public class CategoryController {
 
     CategoryService categoryService;
