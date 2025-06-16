@@ -1,0 +1,37 @@
+spring:
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:uploads/
+  mvc:
+    static-path-pattern: /uploads/**
+  application:
+    name: MobileShopManager
+  datasource:
+#    url: "jdbc:mysql://localhost:9306/mbshopmanager"
+#    username: root
+#    password: root
+#    url: "jdbc:mysql://localhost:3309/phone_management"
+#    username: root
+#    password: 12345
+
+#    url: "jdbc:mysql://root:CKOsxKVRpSXrVRWLjeEAJROydwsJZAsi@junction.proxy.rlwy.net:26898/railway"
+#    username: root
+#    password: CKOsxKVRpSXrVRWLjeEAJROydwsJZAsi
+
+    url: "jdbc:mysql://root:wQDMtFIjWdRdvFwMryyCzLJnMdqmVpFc@hopper.proxy.rlwy.net:21480/railway"
+    username: root
+    password: wQDMtFIjWdRdvFwMryyCzLJnMdqmVpFc
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    database-platform: org.hibernate.dialect.MariaDBDialect
+server:
+  port: 9999
+
+api:
+    prefix: /api/v1
