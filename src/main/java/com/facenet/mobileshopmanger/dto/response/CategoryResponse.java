@@ -10,6 +10,13 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
+/**
+ * @author TranDat
+ * @since 2025-06-16
+ *
+ * DTO để trả về thông tin danh mục.
+ */
 public class CategoryResponse {
     private Long id;
 

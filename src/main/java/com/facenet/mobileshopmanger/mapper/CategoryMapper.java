@@ -7,6 +7,12 @@ import org.mapstruct.Mapping;
 
 
 @Mapper(componentModel = "spring")
+/* * @author TranDat
+ * @since 2025-06-16
+ *
+ * Mapper để chuyển đổi giữa Category entity và Category DTO.
+ * Sử dụng MapStruct để tự động tạo mã chuyển đổi.
+ */
 public interface CategoryMapper {
 
 //    @Mapping(target = "id", source = "id")

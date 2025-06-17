@@ -17,6 +17,14 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Where(clause = "is_deleted = false") // Chỉ lấy các bản ghi chưa bị xóa
+
+/**
+ * @author TranDat
+ * @since 2025-06-16
+ *
+ * Thực thể đại diện cho bảng điện thoại trong cơ sở dữ liệu.
+ * Mỗi điện thoại có thể thuộc về một thương hiệu và có nhiều ảnh liên quan.
+ */
 public class Phone {
     @Id // Khóa chính
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Tăng tự động

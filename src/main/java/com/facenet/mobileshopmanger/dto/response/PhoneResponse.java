@@ -10,6 +10,13 @@ import java.util.List;
 
 @Getter
 @Setter
+
+/**
+ * @author TranDat
+ * @since 2025-06-16
+ *
+ * DTO để trả về thông tin chi tiết của điện thoại.
+ */
 public class PhoneResponse {
     private Long id;
     private String name;

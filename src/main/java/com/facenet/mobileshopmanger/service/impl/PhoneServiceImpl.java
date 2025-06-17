@@ -40,28 +40,25 @@ public class PhoneServiceImpl implements PhoneService {
     PhoneMapper phoneMapper;
     Logger log = LogManager.getLogger();
 
-    /**
-     * Tạo mới một điện thoại.
-     *
-     * @param phoneCreateRequest đối tượng chứa thông tin của điện thoại cần tạo
-     * @return đối tượng PhoneResponse chứa thông tin của điện thoại vừa tạo
-     * @throws IOException nếu có lỗi khi lưu trữ file ảnh
-     */
     @Override
     public PhoneResponse createPhone(PhoneCreateRequest phoneCreateRequest) throws IOException {
+        // Kiểm tra xem danh mục có tồn tại hay không
         Category category = categoryRepository.findById(phoneCreateRequest.getCategoryId())
                 .orElseThrow(() -> {
                     log.error("Category not found with id: {}", phoneCreateRequest.getCategoryId());
                     return new AppException(ErrorCode.CATEGORY_NOT_FOUND);
                 });
+        // Kiểm tra xem điện thoại đã tồn tại với tên và model cụ thể hay chưa
         if(phoneRepository.existsByNameAndModel(phoneCreateRequest.getName(), phoneCreateRequest.getModel())) {
             log.error("Phone with name '{}' and model '{}' already exists", phoneCreateRequest.getName(), phoneCreateRequest.getModel());
             throw new AppException(ErrorCode.PHONE_NAME_AND_MODEL_EXISTED);
         }
+        // Kiểm tra giới hạn số lượng ảnh
         if(phoneCreateRequest.getFiles() != null && phoneCreateRequest.getFiles().size() > 5) {
             log.error("Phone image limit exceeded: {}", phoneCreateRequest.getFiles().size());
             throw new AppException(ErrorCode.PHONE_IMAGE_LIMIT_EXCEEDED);
         }
+        // Tạo mới đối tượng Phone từ thông tin trong request
         Phone phone = Phone.builder()
                 .name(phoneCreateRequest.getName())
                 .category(category)
@@ -105,13 +102,6 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
 
-
-    /**
-     * Lấy danh sách tất cả điện thoại với phân trang.
-     *
-     * @param pageable đối tượng Pageable chứa thông tin phân trang
-     * @return Page chứa danh sách PhoneResponseDTO
-     */
     @Override
     public Page<PhoneResponse> getAllPhones(Pageable pageable) {
         Page<Phone> phones = phoneRepository.findAll(pageable);
@@ -119,13 +109,6 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
 
-    /**
-     * Lấy thông tin điện thoại theo ID.
-     *
-     * @param id ID của điện thoại cần lấy thông tin
-     * @return đối tượng PhoneResponseDTO chứa thông tin của điện thoại
-     * @throws AppException nếu không tìm thấy điện thoại với ID đã cho
-     */
     @Override
     public PhoneResponse getPhoneById(Long id) {
         Phone phone = phoneRepository.findById(id)
@@ -137,33 +120,29 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
 
-    /**
-     * Cập nhật thông tin điện thoại theo ID.
-     *
-     * @param id        ID của điện thoại cần cập nhật
-     * @param phoneDTO đối tượng chứa thông tin cập nhật
-     * @return đối tượng PhoneResponseDTO chứa thông tin của điện thoại sau khi cập nhật
-     * @throws AppException nếu có lỗi
-     */
     @Override
     public PhoneResponse updatePhone(Long id, PhoneCreateRequest phoneDTO) throws IOException {
+        // Kiểm tra xem điện thoại có tồn tại với ID đã cho hay không
         Phone existingPhone = phoneRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Phone not found with id: {}", id);
                     return new AppException(ErrorCode.PHONE_NOT_FOUND);
                 });
 
+        // Kiểm tra xem điện thoại đã tồn tại với tên và model cụ thể, ngoại trừ bản ghi có ID nhất định
         if(phoneRepository.existsByNameAndModelAndIdNot(phoneDTO.getName(), phoneDTO.getModel(), id)) {
             log.error("Phone with name '{}' and model '{}' already exists", phoneDTO.getName(), phoneDTO.getModel());
             throw new AppException(ErrorCode.PHONE_NAME_AND_MODEL_EXISTED);
         }
 
+        // Kiểm tra xem danh mục có tồn tại với ID đã cho hay không
         Category category = categoryRepository.findById(phoneDTO.getCategoryId())
                 .orElseThrow(() -> {
                     log.error("Category not found with id: {}", phoneDTO.getCategoryId());
                     return new AppException(ErrorCode.CATEGORY_NOT_FOUND);
                 });
 
+        // Cập nhật thông tin của điện thoại
         existingPhone.setName(phoneDTO.getName());
         existingPhone.setCategory(category);
         existingPhone.setModel(phoneDTO.getModel());
@@ -179,6 +158,7 @@ public class PhoneServiceImpl implements PhoneService {
         existingPhone.setQuantityInStock(phoneDTO.getQuantityInStock());
         existingPhone.setDescription(phoneDTO.getDescription());
 
+        // Cập nhật ảnh đại diện nếu có
         if (phoneDTO.getAvatar() != null) {
             String avatarUrl = storeFile(phoneDTO.getAvatar());
             existingPhone.setImageAvtUrl(avatarUrl);
@@ -209,12 +189,6 @@ public class PhoneServiceImpl implements PhoneService {
         return phoneMapper.toPhoneResponse(phoneRepository.save(existingPhone));
     }
 
-    /**
-     * Xóa điện thoại theo ID (xóa mềm).
-     *
-     * @param id ID của điện thoại cần xóa
-     * @throws AppException nếu không tìm thấy điện thoại với ID đã cho
-     */
     @Override
     public void deletePhone(Long id) {
         Phone phone = phoneRepository.findById(id)
@@ -227,13 +201,6 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
 
-    /**
-     * Lưu trữ file ảnh vào thư mục uploads.
-     *
-     * @param file đối tượng MultipartFile chứa file ảnh cần lưu
-     * @return tên file mới được lưu trữ
-     * @throws IOException nếu có lỗi khi lưu trữ file
-     */
     public String storeFile(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         String newFileName = UUID.randomUUID().toString() + "_" + fileName;

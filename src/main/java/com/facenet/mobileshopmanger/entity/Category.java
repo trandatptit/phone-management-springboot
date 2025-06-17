@@ -17,6 +17,13 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Where(clause = "is_deleted = false") // Chỉ lấy các bản ghi chưa bị xóa mềm
+
+/* * @author TranDat
+ * @since 2025-06-16
+ *
+ * Thực thể đại diện cho bảng danh mục trong cơ sở dữ liệu.
+ * Mỗi danh mục có thể chứa nhiều điện thoại.
+ */
 public class Category {
     @Id // Khóa chính
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Tăng tự động

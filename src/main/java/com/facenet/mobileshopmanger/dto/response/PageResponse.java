@@ -10,6 +10,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
+/**
+ * @author TranDat
+ * @since 2025-06-16
+ *
+ * DTO để trả về kết quả phân trang.
+ * Chứa danh sách các phần tử trong trang, số trang hiện tại, kích thước của mỗi trang,
+ * tổng số phần tử và tổng số trang.
+ */
 public class PageResponse <T>{
     private List<T> content; // danh sách các phần tử trong trang
     private int page; // số trang hiện tại (bắt đầu từ 0)

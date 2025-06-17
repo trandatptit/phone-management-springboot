@@ -14,6 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+/* * @author TranDat
+ * @since 2025-06-16
+ *
+ * DTO để tạo mới một điện thoại.
+ */
 public class PhoneCreateRequest {
 
     @NotBlank(message = "Tên sản phẩm không được để trống")

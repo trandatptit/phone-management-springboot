@@ -12,6 +12,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * @author TranDat
+ * @since 2025-06-16
+ *
+ * Thực thể đại diện cho bảng ảnh trong cơ sở dữ liệu.
+ * Mỗi ảnh liên kết với một điện thoại và có đường dẫn lưu trữ.
+ */
 public class Image {
     @Id // Khóa chính
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Tăng tự động

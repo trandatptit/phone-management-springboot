@@ -7,6 +7,13 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 @AllArgsConstructor
+/**
+ * @author TranDat
+ * @since 2025-06-16
+ *
+ * Enum đại diện cho các mã lỗi trong ứng dụng.
+ * Mỗi mã lỗi có một mã số, thông điệp và mã trạng thái HTTP tương ứng.
+ */
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "uncategorized exception", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "invalid message key", HttpStatus.BAD_REQUEST),

@@ -27,14 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryMapper categoryMapper;
 
     private static final Logger log = LogManager.getLogger();
-    /**
-     * Tạo mới một danh mục.
-     *
-     * @param categoryDTO đối tượng chứa thông tin của danh mục cần tạo
-     * @return đối tượng Category đã được lưu vào cơ sở dữ liệu
-     */
+
     @Override
     public CategoryResponse createCategory(CategoryCreateRequest categoryDTO) {
+        // kiêm tra xem danh mục đã tồn tại hay chưa
         if(categoryRepository.existsByName(categoryDTO.getName())) {
             log.error("(Create) Category already exists: {}", categoryDTO.getName());
             throw new AppException(ErrorCode.CATEGORY_EXISTED);
@@ -45,20 +41,16 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
-    /**
-     * Cập nhật thông tin danh mục.
-     *
-     * @param id          ID của danh mục cần cập nhật
-     * @param categoryDTO đối tượng chứa thông tin mới của danh mục
-     * @return đối tượng Category đã được cập nhật
-     */
+
     @Override
     public CategoryResponse updateCategory(Long id, CategoryCreateRequest categoryDTO) {
 
+        // Kiểm tra xem danh mục đã tồn tại hay chưa
         if(categoryRepository.existsByName(categoryDTO.getName())) {
             log.error("(Update) Category already exists: {}", categoryDTO.getName());
             throw new AppException(ErrorCode.CATEGORY_EXISTED);
         }
+        // Lấy danh mục theo ID, nếu không tìm thấy thì ném ngoại lệ
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         category.setName(categoryDTO.getName());
@@ -66,11 +58,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
-    /**
-     * Xóa danh mục theo ID.
-     *
-     * @param id ID của danh mục cần xóa
-     */
     @Override
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
@@ -80,15 +67,12 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category); // Lưu lại để cập nhật trạng thái xóa mềm
     }
 
-    /**
-     * Khôi phục danh mục đã xóa theo ID.
-     *
-     * @param id ID của danh mục cần khôi phục
-     */
     @Override
     public void restoreCategory(Long id) {
+        // Tìm kiếm danh mục theo ID, bỏ qua các bản ghi đã xóa mềm
         Category category = categoryRepository.findByIdIgnoreSoftDeleted(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        // Kiểm tra xem danh mục đã bị xóa mềm hay chưa
         if (!category.getIsDeleted()) {
             log.error("Category with id {} is not deleted", id);
             throw new AppException(ErrorCode.CATEGORY_NOT_DELETED);
@@ -98,12 +82,6 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category); // Lưu lại để cập nhật trạng thái khôi phục
     }
 
-    /**
-     * Lấy tất cả danh mục với phân trang.
-     *
-     * @param pageable đối tượng Pageable chứa thông tin phân trang
-     * @return Page<CategoryResponse> danh sách các danh mục đã được chuyển đổi sang dạng phản hồi
-     */
     @Override
     public Page<CategoryResponse> getAllForPageCategories(Pageable pageable) {
         Page<Category> categories = categoryRepository.findAll(pageable);
@@ -114,6 +92,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryResponse> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
+        // Kiểm tra xem danh sách danh mục có rỗng hay không
         if (categories.isEmpty()) {
             log.warn("No categories found");
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
@@ -123,6 +102,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryMapper::toCategoryResponse)
                 .toList();
     }
+
 
     @Override
     public CategoryResponse getCategoryById(Long id) {
@@ -134,7 +114,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryResponse> getAllDeletedCategories(Pageable pageable) {
+        // Tìm kiếm tất cả danh mục đã xóa mềm với phân trang
         Page<Category> deletedCategories = categoryRepository.findAllDeletedCategories(pageable);
+        // Kiểm tra xem có danh mục đã xóa mềm nào không
         if (deletedCategories.isEmpty()) {
             log.warn("No deleted categories found");
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);

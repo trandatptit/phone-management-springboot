@@ -9,6 +9,12 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
+/* * @author TranDat
+ * @since 2025-06-16
+ *
+ * Mapper để chuyển đổi giữa Phone entity và Phone DTO.
+ * Sử dụng MapStruct để tự động tạo mã chuyển đổi.
+ */
 public interface PhoneMapper {
 
 

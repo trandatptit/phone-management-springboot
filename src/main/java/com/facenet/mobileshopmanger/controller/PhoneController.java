@@ -68,6 +68,12 @@ public class PhoneController {
                 .build();
     }
 
+    /**
+     * Lấy danh sách tất cả điện thoại với phân trang.
+     *
+     * @param pageable đối tượng chứa thông tin phân trang
+     * @return ApiResponse chứa danh sách điện thoại và thông tin phân trang
+     */
     @GetMapping("all")
     public ApiResponse<PageResponse<PhoneResponse>> getAllPhones(Pageable pageable) {
         Page<PhoneResponse> phones = phoneService.getAllPhones(pageable);
@@ -84,6 +90,12 @@ public class PhoneController {
                 .build();
     }
 
+    /**
+     * Lấy thông tin điện thoại theo ID.
+     *
+     * @param id ID của điện thoại cần lấy thông tin
+     * @return ApiResponse chứa thông tin của điện thoại
+     */
     @GetMapping("/{id}")
     public ApiResponse<PhoneResponse> getPhoneById(@PathVariable Long id) {
         PhoneResponse phone = phoneService.getPhoneById(id);
@@ -101,6 +113,15 @@ public class PhoneController {
                 .build();
     }
 
+    /**
+     * Cập nhật thông tin điện thoại.
+     *
+     * @param id       ID của điện thoại cần cập nhật
+     * @param phoneDTO đối tượng chứa thông tin mới của điện thoại
+     * @param result   kết quả kiểm tra hợp lệ của dữ liệu
+     * @return ApiResponse chứa thông tin về kết quả cập nhật
+     * @throws IOException nếu có lỗi khi lưu trữ file ảnh
+     */
     @PutMapping("/update")
     public ApiResponse<PhoneResponse> updatePhone(
             @RequestParam Long id,
@@ -134,6 +155,12 @@ public class PhoneController {
                 .build();
     }
 
+    /**
+     * Xóa một điện thoại theo ID (xóa mềm).
+     *
+     * @param id ID của điện thoại cần xóa
+     * @return ApiResponse chứa thông tin về kết quả xóa
+     */
     @DeleteMapping("delete/{id}")
     public ApiResponse<String> deletePhone(@PathVariable Long id) {
        phoneService.deletePhone(id);
@@ -143,6 +170,12 @@ public class PhoneController {
                 .build();
     }
 
+    /**
+     * Khôi phục một điện thoại đã bị xóa theo ID.
+     *
+     * @param id ID của điện thoại cần khôi phục
+     * @return ApiResponse chứa thông tin về kết quả khôi phục
+     */
     @PutMapping("restore/{id}")
     public ApiResponse<String> restorePhone(@PathVariable Long id) {
         phoneService.restorePhone(id);
@@ -152,6 +185,12 @@ public class PhoneController {
                 .build();
     }
 
+    /**
+     * Lấy danh sách tất cả điện thoại đã bị xóa (xóa mềm) với phân trang.
+     *
+     * @param pageable đối tượng chứa thông tin phân trang
+     * @return ApiResponse chứa danh sách điện thoại đã bị xóa và thông tin phân trang
+     */
     @GetMapping("/deleted")
     public ApiResponse<PageResponse<PhoneResponse>> getAllDeletedPhones(Pageable pageable) {
         Page<PhoneResponse> deletedPhones = phoneService.getAllDeletedPhones(pageable);
